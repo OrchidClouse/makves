@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
   Line,
   ReferenceLine,
+  Customized,
 } from 'recharts';
 import CustomizedLine from './CustomizedLine';
 import CustomizedDot from './CustomizedDot';
@@ -82,8 +83,8 @@ const CustomLineChart: React.FC = () => {
             stroke='#8884d8'
             isAnimationActive={true}
             dot={(props) => <CustomizedDot {...props} />}
-            shape={(props: any) => <CustomizedLine {...props} />}
           />
+          <Customized component={<CustomizedLine />} />
         </LineChart>
       </ResponsiveContainer>
     </div>
