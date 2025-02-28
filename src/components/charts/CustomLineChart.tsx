@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   LineChart,
   XAxis,
@@ -8,7 +8,6 @@ import {
   ResponsiveContainer,
   Line,
   ReferenceLine,
-  Customized,
 } from 'recharts';
 import CustomizedLine from './CustomizedLine';
 import CustomizedDot from './CustomizedDot';
@@ -33,10 +32,24 @@ const CustomLineChart: React.FC = () => {
   const upperThreshold = mean + stdDev;
   const lowerThreshold = mean - stdDev;
 
+  const [showReferenceLines, setShowReferenceLines] = useState(true);
+
   return (
     <div>
       <div style={{ marginBottom: '1rem' }}>
-        <h2>График c Z-Score</h2>
+        <h2>График с Z-Score</h2>
+        <p>
+          Участки графика, для которых |z-score| &gt; 1, выделены красным.
+          Наведите на точку, чтобы увидеть подробности.
+        </p>
+        <label>
+          <input
+            type='checkbox'
+            checked={showReferenceLines}
+            onChange={() => setShowReferenceLines(!showReferenceLines)}
+          />
+          Показать референс-линии
+        </label>
       </div>
       <ResponsiveContainer width='100%' height={350}>
         <LineChart
@@ -47,28 +60,30 @@ const CustomLineChart: React.FC = () => {
           <XAxis dataKey='name' />
           <YAxis />
           <Tooltip content={<CustomTooltip />} />
-          <>
-            <ReferenceLine
-              y={upperThreshold}
-              stroke='#FF0000'
-              strokeDasharray='3 3'
-              label='Порог +1'
-            />
-            <ReferenceLine
-              y={lowerThreshold}
-              stroke='#FF0000'
-              strokeDasharray='3 3'
-              label='Порог -1'
-            />
-          </>
+          {showReferenceLines && (
+            <>
+              <ReferenceLine
+                y={upperThreshold}
+                stroke='#FF0000'
+                strokeDasharray='3 3'
+                label='Порог +1'
+              />
+              <ReferenceLine
+                y={lowerThreshold}
+                stroke='#FF0000'
+                strokeDasharray='3 3'
+                label='Порог -1'
+              />
+            </>
+          )}
           <Line
             type='monotone'
             dataKey='value'
             stroke='#8884d8'
             isAnimationActive={true}
             dot={(props) => <CustomizedDot {...props} />}
+            shape={(props: any) => <CustomizedLine {...props} />}
           />
-          <Customized component={CustomizedLine} />
         </LineChart>
       </ResponsiveContainer>
     </div>
